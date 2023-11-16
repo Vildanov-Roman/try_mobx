@@ -23,7 +23,6 @@ const ImageList = observer(() => {
 
   return (
     <div>
-      <Title>Image List</Title>
       <InputWrap>
         <Input
           type="text"
@@ -33,29 +32,23 @@ const ImageList = observer(() => {
         <Btn onClick={handleSearch}>Search</Btn>
       </InputWrap>      
       <Gallery>
-        {imageStore.images.map((image) => (
-          <Item key={image.id}>
-            <Img src={image.webformatURL} alt={image.tags} />
+        {imageStore.images.map(({id, webformatURL, tags}) => (
+          <Item key={id}>
+            <Img src={webformatURL} alt={tags} />
           </Item>
         ))}
       </Gallery>
-      <button onClick={handleLoadMore}>Load More</button>
+      <Btn onClick={handleLoadMore}>Load More</Btn>
     </div>
   );
 });
-
-const Title = styled.h2`
-  font-size: 1.5em;
-  text-align: center;
-  color: #4eb5e5;
-`;
 
 const InputWrap = styled.div`
   display: flex;  
   align-items: center;
   justify-content: center;
 
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 `;
 
 const Input = styled.input`
