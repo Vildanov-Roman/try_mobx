@@ -1,4 +1,4 @@
-import { makeAutoObservable } from 'mobx';
+import { makeObservable, observable, action } from 'mobx';
 
 class ImgeStore {
   images = [];
@@ -8,22 +8,27 @@ class ImgeStore {
   apiKey = '29770100-1ae097b1dc8cc9c4855e1a138';
 
   constructor() {
-    // makeObservable(this, {
-    //   images: observable,
-    //   currentPage: observable,
-    //   query: observable,
-    //   fetchImages: action,
-    //   loadMoreImages: action,
-    // });
+    makeObservable(this, {
+      images: observable,
+      currentPage: observable,
+      query: observable,
+      perPage: observable,
+      apiKey: observable,
+      fetchImages: action,
+      loadMoreImages: action,
+    });
 
-    makeAutoObservable(this)
+    // makeAutoObservable(this)
   }
 
   async fetchImages() {
     try {
       const response = await fetch(`https://pixabay.com/api/?key=${this.apiKey}&page=${this.currentPage}&q=${this.query}&image_type=photo&orientation=horizontal&per_page=${this.perPage}`);
       const data = await response.json();
-      this.images = data.hits;
+      // this.images = data.hits;
+      action(() => {
+        this.images.replace(data.hits);
+      })();
     } catch (error) {
       console.error('Error fetching images:', error);
     }
@@ -34,7 +39,10 @@ class ImgeStore {
     try {
       const response = await fetch(`https://pixabay.com/api/?key=${this.apiKey}&page=${this.currentPage}&q=${this.query}&image_type=photo&orientation=horizontal&per_page=${this.perPage}`);
       const data = await response.json();
-      this.images = [...this.images, ...data.hits];
+      // this.images = [...this.images, ...data.hits];
+      action(() => {
+        this.images.replace([...this.images, ...data.hits]);
+      })();
     } catch (error) {
       console.error('Error loading more images:', error);
     }

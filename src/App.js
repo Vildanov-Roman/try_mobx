@@ -1,26 +1,35 @@
 import React, { useState } from "react";
 import PostList from "./components/Post";
 import ImageList from "./components/Image";
+import Loader from "./components/Loader";
 
 import styled from "styled-components";
 
 const App = () => {
   const [showImgs, setShowImgs] = useState(false);
   const [showPosts, setShowPosts] = useState(false);
+  const [loading, setLoading] = useState(false)
 
   const handleShowImages = () => {
     setShowImgs(true);
     setShowPosts(false);
+    setLoading(true)
   };
 
   const handleShowPosts = () => {
     setShowPosts(true);
     setShowImgs(false);
+    setLoading(true);
   };
 
   const handleBack = () => {
     setShowImgs(false);
     setShowPosts(false);
+    setLoading(false)
+  };
+
+  const handleLoader = (loadingState) => {
+    setLoading(loadingState);
   };
 
   return (
@@ -30,9 +39,9 @@ const App = () => {
           <BtnBack onClick={handleBack}>Return to choosing</BtnBack>
         </div>
       )}
-      {showImgs && <ImageList />}
-      {showPosts && <PostList />}
-      {!showImgs && !showPosts && (
+      {showImgs && <ImageList setLoading={handleLoader}/>}
+      {showPosts && <PostList setLoading={handleLoader}/>}
+      {!showImgs && !showPosts && !loading && (
         <div>
           <Title>Make your choice</Title>
           <ButtonWrap>
@@ -41,6 +50,7 @@ const App = () => {
           </ButtonWrap>
         </div>
       )}
+      {loading && <Loader />}
     </div>
   );
 };

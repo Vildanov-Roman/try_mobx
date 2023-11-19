@@ -1,4 +1,4 @@
-import { observable, action, makeObservable } from 'mobx';
+import { observable, action, makeObservable, computed } from 'mobx';
 
 class PostStore {
   posts = [];
@@ -13,6 +13,8 @@ class PostStore {
       fetchPosts: action,
       nextPage: action,
       prevPage: action,
+      totalPages: computed,
+      paginatedPosts: computed,
     });
   }
 
@@ -20,7 +22,10 @@ class PostStore {
     try {
       const response = await fetch('https://jsonplaceholder.typicode.com/posts');
       const data = await response.json();
-      this.posts = data;
+      // this.posts = data;
+      action(() => {
+        this.posts.replace(data);
+      })();
     } catch (error) {
       console.error('Error fetching posts:', error);
     }
