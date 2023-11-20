@@ -1,14 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react';
 import imageStore from '../stors/ImageStore';
+import Loader from './Loader'
 
 import styled from 'styled-components';
 
 const ImageList = observer(() => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    imageStore.fetchImages();
+    const fetchData = async () => {
+      setLoading(true);
+      await imageStore.fetchImages();
+      setLoading(false);
+    };
+    fetchData();
   }, []);
 
   const handleSearch = () => {
@@ -38,7 +45,10 @@ const ImageList = observer(() => {
           </Item>
         ))}
       </Gallery>
-      <Btn onClick={handleLoadMore}>Load More</Btn>
+      {loading && <Loader />}
+      {!loading && imageStore.images.length >= 12 && (
+        <Btn onClick={handleLoadMore}>Load More</Btn>
+      )}
     </div>
   );
 });

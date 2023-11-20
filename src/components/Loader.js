@@ -13,8 +13,7 @@ const Loader = () => {
       })
     }, 300);
     return () => clearInterval(interval);
-  }, []);
-  console.log("Loader")
+  }, [dots]);
   return <Wrapper className="loader">
             <Title>Loading{dots}</Title>
           </Wrapper>;

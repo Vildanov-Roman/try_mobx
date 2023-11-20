@@ -29,6 +29,7 @@ class ImgeStore {
       action(() => {
         this.images.replace(data.hits);
       })();
+      console.log(data);
     } catch (error) {
       console.error('Error fetching images:', error);
     }

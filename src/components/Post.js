@@ -1,13 +1,20 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react';
 import postStore from '../stors/PostStore';
+import Loader from './Loader'
 
 import styled from 'styled-components'
 
 const PostList = observer(() => {
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    postStore.fetchPosts();
+    const fetchData = async () => {
+      setLoading(true);
+      await postStore.fetchPosts();
+      setLoading(false);
+    };
+    fetchData();
   }, []);
 
   return (
@@ -21,10 +28,13 @@ const PostList = observer(() => {
           </Item>
         ))}
       </List>
-      <ButtonWrap>
-        <BtnPrev onClick={() => postStore.prevPage()}>Previous</BtnPrev>
-        <Btn onClick={() => postStore.nextPage()}>Next</Btn>
-      </ButtonWrap>
+      {loading && <Loader />}
+      {!loading && postStore.posts.length >= 12 && (
+        <ButtonWrap>
+          <BtnPrev onClick={() => postStore.prevPage()}>Previous</BtnPrev>
+          <Btn onClick={() => postStore.nextPage()}>Next</Btn>
+        </ButtonWrap>
+      )}      
     </div>
   );
 });
